@@ -13,6 +13,7 @@ import SystemConfiguration
 class ViewController: UIViewController, UITextFieldDelegate{
 
     @IBOutlet weak var resultadoConexion: UITextView!
+    @IBOutlet weak var imgCover: UIImageView!
     @IBOutlet weak var BusquedaISBN: UITextField!
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,6 +44,7 @@ class ViewController: UIViewController, UITextFieldDelegate{
     @IBAction func Limpiar(_ sender: Any) {
         resultadoConexion.text="";
         BusquedaISBN.text="";
+          self.imgCover.image = UIImage(named: "no found")
     }
     
     
@@ -61,18 +63,51 @@ class ViewController: UIViewController, UITextFieldDelegate{
       
         let url=NSURL(string: urls)
         let datos:NSData?=NSData(contentsOf: url! as URL)
-
-        var texto=NSString(data: datos! as Data, encoding: String.Encoding.utf8.rawValue)
-            if(texto!=="{}"){
-                resultadoConexion.text=texto as String!
+           
+                do{
+                let json = try JSONSerialization.jsonObject(with: datos! as Data, options:
+                    JSONSerialization.ReadingOptions.mutableContainers)
+                let dicPrincipal=json as! NSDictionary
+                    let dicSecundario=dicPrincipal["ISBN:"+isbn] as! NSDictionary
+                    let titulo=dicSecundario["title"] as! NSString as String
+                    let autores=dicSecundario["authors"] as! NSArray
+                    let autor=autores[0] as! NSDictionary
+                    let nombreAutor=autor["name"] as! NSString as String
+                    let portada=dicSecundario["cover"] as! NSDictionary?
+                    let portadaMedium=portada?["medium"] as! NSString? as String?
+                    
+                    let texto=NSString(data: datos! as Data, encoding: String.Encoding.utf8.rawValue)
+                    
+                    if(texto) != "{}"{
+                        if(portadaMedium != nil) {
+                        let urlImage = URL(string: portadaMedium!)
+                        let dataImage = try? Data(contentsOf: urlImage!)
+                        self.imgCover.image = UIImage(data: dataImage!)
+                        }
+                        else {
+                            self.imgCover.image = UIImage(named: "no found")
+                            }
+                        
+                        resultadoConexion.text="Titulo: " + titulo + "\nAutor: " + nombreAutor
+                       
+                    }
+                        else{
+                        resultadoConexion.text="No hay resultado para mostrar"
+                    }
+                    
+                }
+                
+            catch  _ {
+                
             }
-            else{
-              resultadoConexion.text="No hay resultado para mostrar"
-            }
-        }
+            
+                 }
         
         else{
              showAlertMessage(title: "Error", message: "Por favor revise la conexión de internet e intente nuevamente", owner: self)
+            resultadoConexion.text="";
+            BusquedaISBN.text="";
+            self.imgCover.image = UIImage(named: "no found")
         }
         
         
