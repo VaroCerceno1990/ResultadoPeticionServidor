@@ -14,12 +14,14 @@ class ViewController: UIViewController, UITextFieldDelegate{
 
     @IBOutlet weak var resultadoConexion: UITextView!
     @IBOutlet weak var imgCover: UIImageView!
+    @IBOutlet weak var portadaLabel: UILabel!
     @IBOutlet weak var BusquedaISBN: UITextField!
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
         BusquedaISBN.delegate = self
+        portadaLabel.isHidden = true
           }
 
     override func didReceiveMemoryWarning() {
@@ -44,7 +46,8 @@ class ViewController: UIViewController, UITextFieldDelegate{
     @IBAction func Limpiar(_ sender: Any) {
         resultadoConexion.text="";
         BusquedaISBN.text="";
-          self.imgCover.image = UIImage(named: "no found")
+        self.imgCover.image = UIImage(named: "no found")
+       portadaLabel.isHidden = true
     }
     
     
@@ -54,6 +57,10 @@ class ViewController: UIViewController, UITextFieldDelegate{
         if(isbn.characters.count==0)
             {
                  showAlertMessage(title: "Advertencia", message: "Por favor digite el ISBN a buscar", owner: self)
+                resultadoConexion.text="";
+                BusquedaISBN.text="";
+                self.imgCover.image = UIImage(named: "no found")
+                portadaLabel.isHidden = true
                 
                 return
             }
@@ -70,9 +77,9 @@ class ViewController: UIViewController, UITextFieldDelegate{
                 let dicPrincipal=json as! NSDictionary
                     let dicSecundario=dicPrincipal["ISBN:"+isbn] as! NSDictionary
                     let titulo=dicSecundario["title"] as! NSString as String
-                    let autores=dicSecundario["authors"] as! NSArray
-                    let autor=autores[0] as! NSDictionary
-                    let nombreAutor=autor["name"] as! NSString as String
+                    let autores=dicSecundario["authors"] as! NSArray?
+                    let autor=autores?[0] as! NSDictionary?
+                    var nombreAutor=autor?["name"] as! NSString? as String?
                     let portada=dicSecundario["cover"] as! NSDictionary?
                     let portadaMedium=portada?["medium"] as! NSString? as String?
                     
@@ -83,12 +90,16 @@ class ViewController: UIViewController, UITextFieldDelegate{
                         let urlImage = URL(string: portadaMedium!)
                         let dataImage = try? Data(contentsOf: urlImage!)
                         self.imgCover.image = UIImage(data: dataImage!)
+                            portadaLabel.isHidden = false
                         }
                         else {
                             self.imgCover.image = UIImage(named: "no found")
                             }
+                        if(nombreAutor==nil){
+                        nombreAutor=""
+                        }
                         
-                        resultadoConexion.text="Titulo: " + titulo + "\nAutor: " + nombreAutor
+                        resultadoConexion.text="Titulo: " + titulo + "\nAutor: " + nombreAutor!
                        
                     }
                         else{
@@ -108,6 +119,7 @@ class ViewController: UIViewController, UITextFieldDelegate{
             resultadoConexion.text="";
             BusquedaISBN.text="";
             self.imgCover.image = UIImage(named: "no found")
+            portadaLabel.isHidden = true
         }
         
         

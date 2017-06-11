@@ -64,7 +64,7 @@
                                 <rect key="frame" x="57" y="441" width="288" height="206"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Portada" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="V8I-gf-tZN">
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Portada" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="V8I-gf-tZN">
                                 <rect key="frame" x="173" y="409" width="61" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -77,6 +77,7 @@
                     <connections>
                         <outlet property="BusquedaISBN" destination="Csa-qI-qsX" id="rj3-S2-Fdo"/>
                         <outlet property="imgCover" destination="XCX-mi-uls" id="s3u-Zg-fNr"/>
+                        <outlet property="portadaLabel" destination="V8I-gf-tZN" id="XY7-PL-7p2"/>
                         <outlet property="resultadoConexion" destination="gCl-BO-ahJ" id="Cy8-l6-1d4"/>
                     </connections>
                 </viewController>
